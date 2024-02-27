@@ -1,0 +1,19 @@
+{
+  "name": "03.node-npm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "eslint": "eslint index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "moment": "^2.30.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0"
+  }
+}
