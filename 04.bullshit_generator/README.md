@@ -1,0 +1,6 @@
+- index.js 入口文件
+- corpus 语料库
+- lib 库文件
+  - generator.js 生成文章
+  - random.js 随机模块
+- output 输出结果
