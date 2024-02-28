@@ -1,8 +1,9 @@
-import { createRandomPicker } from "./random";
+import { createRandomPicker, randomInt } from "./random.js";
 
 export function generate(title, { corpus, min = 6000, max = 10000 } = {}) {
   // 将文章长度设置为 min 到 max之间的随机数
   const articleLength = randomInt(min, max);
+
   const { famous, bosh_before, bosh, said, conclude } = corpus;
   const [pickFamous, pickBoshBefore, pickBosh, pickSaid, pickConclude] = [
     famous,
@@ -11,6 +12,7 @@ export function generate(title, { corpus, min = 6000, max = 10000 } = {}) {
     said,
     conclude,
   ].map((item) => {
+    // console.log("item", item);
     return createRandomPicker(item);
   });
 
@@ -58,6 +60,6 @@ function sentence(pick, replacer) {
       new RegExp(`{{${key}}}`, "g"),
       typeof replacer[key] === "function" ? replacer[key]() : replacer[key]
     );
-    return ret;
   }
+  return ret;
 }

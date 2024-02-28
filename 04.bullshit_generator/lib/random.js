@@ -18,5 +18,5 @@ export function createRandomPicker(arr) {
 
   randomPick(); //抛弃第一次选择得结果
 
-  return randomPick();
+  return randomPick;
 }
