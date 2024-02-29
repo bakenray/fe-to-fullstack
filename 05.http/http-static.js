@@ -2,8 +2,8 @@ const http = require("http");
 const url = require("url");
 const path = require("path");
 const fs = require("fs");
-// const mime = require("mime");
-import mime from "mime";
+const mime = require("mime");
+// import mime from "mime";
 const server = http.createServer((req, res) => {
   // req.url转换为文件路径，同时拼接www目录路径进来，join保留相对路径
   // path.resolve解析请求的路径，resolve得到绝对路径
@@ -19,17 +19,17 @@ const server = http.createServer((req, res) => {
       filePath = path.join(filePath, "index.html");
     }
 
-    if (!isDir || fs.existsSync(filePath)) {
-      // const content = fs.readFileSync(filePath); //同步读取文件内容
+    if (fs.existsSync(filePath)) {
       const { ext } = path.parse(filePath);
       res.writeHead(200, { "Content-Type": mime.getType(ext) });
-      // return res.end(content); // IO容易阻塞
-      const fileStream = fs.createReadStream(filePath); //以流的方式读取文件内容
+      //以流的方式读取文件内容
+      const fileStream = fs.createReadStream(filePath);
       fileStream.pipe(res); // pipe 方法可以将两个流连接起来，这样数据就会从上游流向下游
     }
+  } else {
+    res.writeHead(404, { "Content-Type": "text/html" });
+    res.end("<h1>Not Found</h1>");
   }
-  res.writeHead(404, { "Content-Type": "text/html" });
-  res.end("<h1>Not Found</h1>");
 });
 
 server.on("clientError", (err, socket) => {

@@ -8,5 +8,24 @@
   <body>
     <h1>Node.js 静态服务</h1>
     <img src="assets/image/logo.png" />
+    <script>
+      fetch('http://localhost:8080/assets/js/test.js').then((res) => {
+        // console.log('res', res)
+        const reader = res.body.getReader();
+        processResult(reader)
+      })
+      function processResult(reader) {
+        reader.read().then(function(result) {
+          if(result.done) {
+            console.log("读取完成")
+            return
+          }
+          const chunk = new Uint8Array(result.value)
+          let decoder = new TextDecoder('utf-8');
+          console.log('chunk', decoder.decode(chunk))
+          processResult(reader)
+        })
+      }
+    </script>
   </body>
 </html>
