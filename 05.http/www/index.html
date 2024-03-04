@@ -8,6 +8,7 @@
   <body>
     <h1>Node.js 静态服务</h1>
     <img src="assets/image/logo.png" />
+    <script src="assets/js/spritejs.js"></script>
     <script>
       fetch('http://localhost:8080/assets/js/test.js').then((res) => {
         const reader = res.body.getReader();
@@ -16,12 +17,12 @@
       function processResult(reader) {
         reader.read().then(function(result) {
           if(result.done) {
-            // console.log("读取完成")
+
             return
           }
           const chunk = new Uint8Array(result.value)
           let decoder = new TextDecoder('utf-8');
-          // console.log('chunk', decoder.decode(chunk))
+
           processResult(reader)
         })
       }
