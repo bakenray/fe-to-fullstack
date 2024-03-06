@@ -9,6 +9,32 @@ const router = new Router();
 //   await next();
 // });
 
+app.use(({ req }, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
+
+app.use(require("./http-aspect-param"));
+
+app.use(
+  router.get("/coronavirus/index", async ({ route, res }, next) => {
+    const { getCoronavirusKeyIndex } = require("./module/mock");
+    const index = getCoronavirusKeyIndex();
+    res.setHeader("Content-Type", "application/json");
+    res.body = { data: index };
+    await next();
+  })
+);
+app.use(
+  router.get("/coronavirus/:date", async ({ route, res }, next) => {
+    const { getCoronavirusByDate } = require("./module/mock");
+    const data = getCoronavirusByDate(route.date);
+    res.setHeader("Content-Type", "application/json");
+    res.body = { data };
+    await next();
+  })
+);
+
 app.use(
   router.get("/test/:course/:lecture", async ({ route, res }, next) => {
     res.setHeader("Content-Type", "application/json");
@@ -21,7 +47,8 @@ app.use(
 app.use(
   router.all(".*", async ({ req, res }, next) => {
     res.setHeader("Content-Type", "text/html");
-    res.body = "<h1>Hello World</h1>";
+    res.body = "<h1>Not Found</h1>";
+    res.statusCode = 404;
     await next();
   })
 );
