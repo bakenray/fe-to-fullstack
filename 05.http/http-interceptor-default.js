@@ -1,3 +1,4 @@
+const fs = require("fs");
 const Server = require("./http-interceptor-server");
 const Router = require("./http-interceptor-router");
 const app = new Server();
@@ -20,18 +21,45 @@ app.use(
   router.get("/coronavirus/index", async ({ route, res }, next) => {
     const { getCoronavirusKeyIndex } = require("./module/mock");
     const index = getCoronavirusKeyIndex();
-    res.setHeader("Content-Type", "application/json");
-    res.body = { data: index };
+    const handlebars = require("handlebars");
+
+    // 模版文件
+    const tpl = fs.readFileSync("./view/coronavirus_index.html", {
+      encoding: "utf-8",
+    });
+    // 编译模版
+    const template = handlebars.compile(tpl);
+    // 数据模版结合
+    const result = template({ data: index });
+
+    res.setHeader("Content-Type", "text/html");
+    res.body = result;
     await next();
   })
 );
+
 app.use(
-  router.get("/coronavirus/:date", async ({ route, res }, next) => {
+  router.get("/coronavirus/:date", async ({ params, route, res }, next) => {
     const { getCoronavirusByDate } = require("./module/mock");
     const data = getCoronavirusByDate(route.date);
-    res.setHeader("Content-Type", "application/json");
-    res.body = { data };
-    await next();
+
+    console.log("params", params);
+
+    if (params.type === "json") {
+      res.setHeader("Content-Type", "application/json");
+      res.body = { data };
+    } else {
+      const handlebars = require("handlebars");
+      const tpl = fs.readFileSync("./view/coronavirus_date.html", {
+        encoding: "utf-8",
+      });
+      const template = handlebars.compile(tpl);
+      const result = template({ data });
+
+      res.setHeader("Content-Type", "text/html");
+      res.body = result;
+      await next();
+    }
   })
 );
 
