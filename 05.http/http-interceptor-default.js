@@ -8,13 +8,15 @@ const router = new Router();
 //   res.body = "<h1>Hello World</h1>";
 //   await next();
 // });
+
 app.use(
-  router.all("/test/:course/:lecture", async ({ route, res }, next) => {
+  router.get("/test/:course/:lecture", async ({ route, res }, next) => {
     res.setHeader("Content-Type", "application/json");
     res.body = route;
     await next();
   })
 );
+
 // 默认路由
 app.use(
   router.all(".*", async ({ req, res }, next) => {

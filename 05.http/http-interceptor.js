@@ -2,13 +2,15 @@ class Interceptor {
   constructor() {
     this.aspects = []; //存储拦截切面
   }
-  //注册拦截切面
+
   use(/* async*/ functor) {
+    //注册拦截切面
     this.aspects.push(functor);
     return this;
   }
-  //执行注册的拦截切面
+
   async run(context) {
+    //执行注册的拦截切面
     const aspects = this.aspects;
     //将注册的拦截切面包装成一个洋葱模型
     const proc = aspects.reduceRight(

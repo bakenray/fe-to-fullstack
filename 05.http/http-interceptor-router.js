@@ -5,9 +5,12 @@ const path = require("path");
  *@pathname 路径名
  */
 function check(rule, pathname) {
-  const paraMatched = rule.match(/:[^/]+/g);
-  const ruleExp = new RegExp(`^${rule.replace(/:[^/]+/g, "([^/]+)")}$`);
+  rule = rule.split(path.sep).join("/"); //windows转换分隔符
+  const paraMatched = rule.match(/:[^/]+/g); //mac
+  const ruleExp = new RegExp(`^${rule.replace(/:[^/]+/g, "([^/]+)")}$`); //mac
+
   const ruleMatched = pathname.match(ruleExp);
+
   if (ruleMatched) {
     const ret = {};
     if (paraMatched) {
@@ -23,6 +26,7 @@ function check(rule, pathname) {
 function route(method, rule, aspect) {
   return async (ctx, next) => {
     const req = ctx.req;
+
     if (!ctx.url) ctx.url = new url.URL(`http://${req.headers.host}${req.url}`);
     const checked = check(rule, ctx.url.pathname);
     if (!ctx.route && (method === "*" || req.method === method) && !!checked) {
