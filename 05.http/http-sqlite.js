@@ -1,7 +1,7 @@
 const path = require("path");
 const sqlite3 = require("sqlite3");
 const { open } = require("sqlite");
-const { Server, Router } = require("./lib/interceptor");
+const { Server, Router } = require("./http-interceptor-sqlite");
 
 const dbFile = path.resolve(__dirname, "./database/todolist.db");
 let db = null;
@@ -9,11 +9,13 @@ let db = null;
 const app = new Server(); //创建HTTP服务器
 const router = new Router(); //创建路由中间件
 
+// 请求路径log
 app.use(async ({ req }, next) => {
   console.log(`${req.method} ${req.url}`);
   await next();
 });
 
+// 数据库连接
 app.use(async (ctx, next) => {
   if (!db) {
     //如果数据库连接未创建，就创建一个
